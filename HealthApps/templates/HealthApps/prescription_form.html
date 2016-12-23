@@ -1,0 +1,70 @@
+{% extends 'HealthApps/base.html' %}
+{% block content %}
+{% if user.is_authenticated %}
+        {% if user_type == "doctor" or user.is_superuser %}
+
+<h1>Prescribe Medication</h1>
+<form id="reg_form" enctype="multipart/form-data" action="" method="post">
+    {% csrf_token %}
+
+    <div class="fieldWrapper">
+            <div class="col-md-5">
+                <div class="form-group">
+
+                        <label class="form-control-label" for="name">{{ form.name.label_tag }}</label>
+                        <input name="name" id="name" type="text" class="form-control"
+                                      placeholder="Enter Name">
+                        <p>{{ form.name.errors }}</p>
+                </div>
+
+                <div class="form-group">
+
+                        <label class="form-control-label" for="dosage_amount">{{ form.dosage_amount.label_tag }}</label>
+                        <input name="dosage_amount" id="dosage_amount" type="number" min=0 class="form-control"
+                                      placeholder="Enter amount">
+                        <p>{{ form.dosage_amount.errors }}</p>
+                </div>
+                <div class="form-group">
+                        <label class="form-control-label" for="dosage_unit">{{ form.dosage_unit.label_tag }}</label>
+                        <select id="dosage_unit" class="form-control" name="dosage_unit">
+                            {% for value, text in form.fields.dosage_unit.choices %}
+
+                            <option value="{{ value }}">{{ text }}</option>
+
+                            {% endfor %}
+                        </select>
+                        <p>{{ form.dosage_unit.errors.as_text }}</p>
+                </div>
+                <div class="form-group">
+
+                        <label class="form-control-label" for="frequency_amount">{{ form.frequency_amount.label_tag }}</label>
+                        <input name="frequency_amount" id="frequency_amount" type="number" min=0 class="form-control"
+                                      placeholder="Enter frequency">
+                        <p>{{ form.frequency_amount.errors }}</p>
+                </div>
+                <div class="form-group">
+                        <label class="form-control-label" for="frequency_unit">{{ form.frequency_unit.label_tag }}</label>
+                        <select id="frequency_unit" class="form-control" name="frequency_unit">
+                            {% for value, text in form.fields.frequency_unit.choices %}
+
+                            <option value="{{ value }}">{{ text }}</option>
+
+                            {% endfor %}
+                        </select>
+                        <p>{{ form.frequency_unit.errors.as_text }}</p>
+                </div>
+            <br>
+                    <br /><input type="submit" class="btn btn-primary" value="Submit"/>
+
+            </div>
+
+        <br />
+        </div>
+
+</form>
+{% endif %}
+    {% else %}
+    <br /><br /><br />
+    <p class="lead text-center">Please Log in <a href="/login/">here</a>.</p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'HealthApps/base.html' %}
+{% block content %}
+    {% if request.user.is_superuser or user_type == 'admin' %}
+        <h1>Log Item {{ log_item.id }}</h1>
+        <h3>Timestamp:</h3>
+        <div>{{ log_item.timestamp }}</div>
+        <h3>Description:</h3>
+        <div>{{ log_item.description }}</div>
+        {% if log_item.verbose_description %}
+            <h3>Verbose Description:</h3>
+            <div>{{ log_item.verbose_description }}</div>
+        {% endif %}
+    {% else %}
+        <div>Must be logged in as an admin to view logs.</div>
+    {% endif %}
+{% endblock %}

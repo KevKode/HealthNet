@@ -1,0 +1,19 @@
+{% extends 'HealthApps/base.html' %}
+{% block content %}
+{% if request.user.is_superuser or user_type == "admin" %}
+<h1>Register a ...</h1>
+{% else %}
+<h1>Register as a...</h1>
+{% endif %}
+<div class="container">
+    <a href="/createPatient" name="patient" class="btn btn-primary btn-lg">Patient</a>
+    <a href="/createNurse" name="nurse" class="btn btn-primary btn-lg">Nurse</a>
+    <a href="/createDoctor" name="doctor" class="btn btn-primary btn-lg">Doctor</a>
+    {% if request.user.is_superuser %}
+    <a href="/createAdmin" class="btn btn-primary btn-lg">Hospital Administrator</a>
+    {% endif %}
+    {% if request.user.is_superuser %}
+    <a href="/createHospital" class="btn btn-primary btn-lg">Hospital</a>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends 'HealthApps/base.html' %}
+{% block content %}
+    <div class="container">
+        <h1>Staff to Approve</h1>
+        {% if user.is_authenticated %}
+            {% if user.is_superuser %}
+                <p>Click on an approve to add the doctor to the hospital(s). </p>
+            {% else %}
+                <br/>
+            {% endif %}
+        {% endif %}
+            <table class="table table-striped table-hover">
+                <tr>
+                    <th>Name</th>
+                    <th>Hospital(s)</th>
+                    <th>Staff Type</th>
+                    <th>Approve?</th>
+                </tr>
+                {% if user.is_authenticated and user.is_superuser %}
+                    {% if doctors|length > 0 or nurses|length > 0 %}
+                        {% for doctor in doctors %}
+
+                            <tr class="table-row">
+                                <td>{{ doctor.user.get_full_name }}</td>
+                                <td>{{ dHosp }}</td>
+                                <td>Doctor</td>
+                                <td><a id="appDoc" class="btn btn-primary btn-sm">Approve</a></td>
+                            </tr>
+                            <script>
+                                document.getElementById("appDoc").onclick = function () {
+
+                                    $.ajax({
+                                        url: "/approveDoc/{{ doctor.id }}"
+                                    }).done(function( o ) {
+                                        window.location = "/approveList"
+                                    });
+                                }
+                            </script>
+                        {% endfor %}
+
+                        {% for nurse in nurses %}
+                                    <tr class="table-row">
+                                        <td>{{ nurse.user.get_full_name }}</td>
+                                        {% for hospital in nurse.hospitals.all %}
+                                            <td>{{ nHosp }}</td>
+                                        {%  endfor %}
+                                        <td>Nurse</td>
+                                        <td><a id="appNur" class="btn btn-primary btn-sm">Approve</a></td>
+                                    </tr>
+                                    <script>
+                                        document.getElementById("appNur").onclick = function () {
+
+                                            $.ajax({
+                                                url: "/approveNur/{{ nurse.id }}"
+                                            }).done(function( o ) {
+                                                window.location = "/approveList"
+                                            });
+                                        }
+                                    </script>
+                        {% endfor %}
+                    {% else %}
+                        <tr><td colspan="7">Nothing here yet!</td></tr>
+                    {% endif %}
+                {% else %}
+
+                <a href="/login" class="btn btn-default navbar-right">Login</a>
+                {% endif %}
+
+
+        </table>
+    </div>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends 'HealthApps/base.html' %}
+{% block content %}
+<div class="container">
+    <h1>Update Profile</h1>
+    {{ form.non_field_errors }}
+    <form enctype="multipart/form-data" action="" method="post" id="update_form">{% csrf_token %}
+        <div class="form-group">
+                        <label class="form-control-label">Emergency Name:</label>
+                        <br /><br />
+                        <div class="col-xs-9">
+                            <p>{{ form.emergency_name }}</p>
+                        </div>
+                        <p>{{ form.emergency_name.errors.as_text }}</p>
+        </div>
+        <br /><br />
+        <div class="form-group">
+                        <label class="form-control-label">Emergency Number:</label>
+                        <br /><br />
+                        <div class="col-xs-9">
+                            <p>{{ form.emergency_number }}</p>
+                        </div>
+                        <p>{{ form.emergency_number.errors.as_text }}</p>
+        </div>
+
+        <br/>
+        <br />
+        <br/>
+        <br />
+        <input type="submit" value="Save" class="btn btn-success"/>
+        <a href="/profile" class="btn btn-primary">Cancel</a>
+        <br/>
+        <br/>
+    </form>
+</div>
+
+<script src="http://cdn.jsdelivr.net/jquery.validation/1.15.1/jquery.validate.js"></script>
+
+<script type="text/javascript">
+    $.validator.setDefaults({
+        highlight: function (element) {
+            $(element).closest('.form-group').addClass('has-error');
+            $(element).closest('.form-group').removeClass('has-success');
+        },
+        unhighlight: function (element) {
+            $(element).closest('.form-group').removeClass('has-error');
+            $(element).closest('.form-group').addClass('has-success');
+        },
+        errorElement: 'span',
+        errorClass: 'help-block',
+        errorPlacement: function (error, element) {
+            if (element.parent('.input-group').length) {
+                error.insertAfter(element.parent());
+            } else {
+                error.insertAfter(element);
+            }
+        }
+    });
+
+    FORM_RULES = {
+        '{{ form.first_name.name }}': 'required',
+        '{{ form.last_name.name }}': 'required',
+        '{{ form.emergency_name.name }}': 'required',
+        '{{ form.emergency_number.name }}': 'required EMERGENCY_NUMBER'
+    };
+
+    $(document).ready(function () {
+        $.validator.addMethod("EMAIL", function (value, element) {
+                return this.optional(element) || /^[a-zA-Z0-9._-]+@[a-zA-Z0-9-]+\.[a-zA-Z.]{2,5}$/i.test(value);
+            }, "Email Address is invalid: Please enter a valid email address."
+        );
+        $.validator.addMethod("EMERGENCY_NUMBER", function (value, element) {
+                return /^(\(\d{3}\)|\d{3})?[- \.]?(\d{3})[- \.]?(\d{4})$/i.test(value);
+            }, "Please input a valid phone number."
+        );
+
+
+        $('#update_form').validate({
+            rules: FORM_RULES
+        });
+    });
+</script>
+{% endblock %}

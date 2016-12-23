@@ -1,0 +1,27 @@
+{% extends 'HealthApps/base.html' %}
+{% block content %}
+<div class="container">
+    {{ form.non_field_errors }}
+    <form enctype="multipart/form-data" action="" method="post">{% csrf_token %}
+        <h2>Hospital</h2>
+        {{ form.hospital }}
+        {{ form.hospital.errors }}
+        <h2>Doctor</h2>
+        {{ form.doctor }}
+        {{ form.doctor.errors }}
+        <h2>Emergency Contact Name</h2>
+        {{ form.emergency_name }}
+        {{ form.emergency_name.errors }}
+        <h2>Emergency Contact Number</h2>
+        {{ form.emergency_number }}
+        {{ form.emergency_number.errors }}
+        <h2>Height</h2>
+        {{ form.height }}
+        {{ form.height.errors }}
+        <h2>Weight</h2>
+        {{ form.weight }}
+        {{ form.weight.errors }}
+        <input type="submit" value="Submit"/>
+    </form>
+</div>
+{% endblock %}

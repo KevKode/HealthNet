@@ -1,0 +1,49 @@
+{% load static %}
+body {
+  padding-top: 50px;
+    margin-bottom: 60px;
+    height: 100%
+}
+.template {
+  padding: 40px 15px;
+  text-align: center;
+}
+#calendar {
+		max-width: 900px;
+		margin: 0 auto;
+}
+#hospital {
+		width: 100px;
+        height: 100px;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  /* Set the fixed height of the footer here */
+  height: auto;
+  background-color: #f5f5f5;
+}
+
+footer{
+        clear:both;
+        height: auto;
+        padding-top: 1%;
+        padding-bottom:1%;
+        background-color:#f5f5f5;
+    }
+.jumbotron{
+    background: url("photos/doctor.jpeg");
+    background-size: cover;
+    color: #ffffff;
+    font-weight: bold;
+    text-shadow: 2px 2px 10px #000000, 2px 2px 100px #ffffff;
+    height: 500px
+}
+.welcome{
+  font-size: 20px;
+  margin-top: 1%;
+  color: #ffffff;
+}

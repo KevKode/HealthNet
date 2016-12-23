@@ -1,0 +1,156 @@
+{% extends 'HealthApps/base.html' %}
+{% block content %}
+    <h1>EMR Entry {{ emr_entry.id }}</h1>
+    {% if user.is_authenticated %}
+        {% if user_type == "doctor" or user_type == "admin" or user_type == "nurse" or user_type == "patient"%}
+        <a href="/EMR/{{ emr_entry.patient.id }}" class="btn btn-primary btn-sm">Return to EMR</a>
+
+        <h3>Type:</h3>
+        {{ emr_entry.type }}
+        {% if emr_entry.type == "Test Create" or emr_entry.type == "Test Release"%}
+
+            <h3>Timestamp:</h3>
+            {{ emr_entry.timestamp }}
+            <h3>Hospital:</h3>
+            {{ emr_entry.test.hospital.name }}
+            <h3>Doctor:</h3>
+            {{ emr_entry.test.doctor.user.first_name }} {{ emr_entry.test.doctor.user.last_name }}
+            <h3>Name:</h3>
+            {{ emr_entry.test.name }}
+            <h3>Description:</h3>
+            <div style=" width:450px; word-wrap:break-word;">{{ emr_entry.test.description }}</div>
+            {% if emr_entry.test.file.name %}
+                <h3>File:</h3>
+                <a href="{{ emr_entry.test.file.url }}">{{ emr_entry.test.filename }}</a>
+            {% endif %}
+
+            <br/><br/>
+            {% if user_type == "doctor" %}
+                {% if emr_entry.test.released %}
+                    <a class="btn btn-default btn-sm disabled">Test result was released</a>
+                {% else %}
+                    <a id="releaseResult" class="btn btn-default btn-sm">Release Test Result</a>
+                {% endif %}
+            {% endif %}
+
+            <script>
+                $("#releaseResult").click(function () {
+                    if (confirm('You are about to release this test result to be visible to the patient')){
+                    $.ajax({
+                        url: "/release/{{ emr_entry.test.id }}"
+                    }).done(function( o ) {
+                        location.reload()
+                    });
+                }})
+            </script>
+
+        {% elif emr_entry.type == "Prescribe Prescription" or emr_entry.type == "Delete Prescription"%}
+
+            <h3>Timestamp:</h3>
+            {{ emr_entry.timestamp }}
+            <h3>Doctor:</h3>
+            {{ emr_entry.prescription.doctor.user.first_name }} {{ emr_entry.prescription.doctor.user.last_name }}
+            <h3>Name:</h3>
+            {{ emr_entry.prescription.name }}
+            <h3>Dosage Amount:</h3>
+            {{ emr_entry.prescription.dosage_amount }} {{ emr_entry.prescription.dosage_unit }}
+            <h3>Dosage Frequency:</h3>
+            {{ emr_entry.prescription.frequency_amount }} doses {{ emr_entry.prescription.frequency_unit }}
+
+            <br/><br/>
+
+            {% if user_type == "doctor" %}
+                {% if emr_entry.prescription.prescribed %}
+                    <a id="deletePrescription" class="btn btn-default btn-sm">End Prescription</a>
+
+                {% else %}
+                    <a class="btn btn-default btn-sm disabled">Prescription was ended</a>
+                {% endif %}
+            {% endif %}
+
+            <script>
+                $("#deletePrescription").click(function () {
+                    if (confirm('You are about to end this prescription')){
+                    $.ajax({
+                        url: "/delete/{{ emr_entry.prescription.id }}"
+                    }).done(function( o ) {
+                        location.reload()
+                    });
+                }})
+            </script>
+
+        {% elif emr_entry.type == "Admit" %}
+
+            <h3>Timestamp:</h3>
+            {{ emr_entry.timestamp }}
+            <h3>Description:</h3>
+            {{ emr_entry.description }}
+
+            <br/><br/>
+
+        {% elif emr_entry.type == "Discharge" %}
+
+            <h3>Timestamp:</h3>
+            {{ emr_entry.timestamp }}
+            <h3>Description:</h3>
+            {{ emr_entry.description }}
+
+            <br/><br/>
+
+        {% elif emr_entry.type == "Transfer" %}
+
+            <h3>Timestamp:</h3>
+            {{ emr_entry.timestamp }}
+            <h3>Description:</h3>
+            {{ emr_entry.description }}
+
+            <br/><br/>
+
+        {% else %}
+
+            <h3>Timestamp:</h3>
+            {{ emr_entry.timestamp }}
+            <h3>Description:</h3>
+             <div style=" width:450px; word-wrap:break-word;">{{ emr_entry.description }}</div>
+
+            <br/><br/>
+
+        {% endif %}
+
+        {% if user_type == "doctor" %}
+            {% if emr_entry.shown %}
+                <a id="hideEntry" class="btn btn-danger btn-sm">Hide Entry from Patient</a>
+            {% else %}
+                <a id="showEntry" class="btn btn-success btn-sm">Show Entry to Patient</a>
+
+            {% endif %}
+        {% endif %}
+
+        <script>
+            $(document).ready(function () {
+
+              $("#hideEntry").click(function () {
+                    $.ajax({
+                        url: "/hide/{{ emr_entry.id }}"
+                    }).done(function( o ) {
+                        location.reload()
+                    });
+                });
+
+                $("#showEntry").click(function () {
+                    if (confirm('You are about to release this EMR entry to be visible to the patient')){
+                    $.ajax({
+                        url: "/show/{{ emr_entry.id }}"
+                    }).done(function( o ) {
+                        location.reload()
+                    });
+                }});
+
+            })
+        </script>
+        {% endif %}
+    {% else %}
+        Please Log in <a href="/login/">here</a>.
+    {% endif %}
+
+{% endblock %}

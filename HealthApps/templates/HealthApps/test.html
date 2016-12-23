@@ -1,0 +1,46 @@
+{% extends 'HealthApps/base.html' %}
+{% block content %}
+    {% if user_type == "doctor" or user_type == "admin" or user_type == "patient" or user_type == "nurse"%}
+        <h1>{{ test.name }}</h1>
+
+        <a href="/EMR/{{ test.patient.id }}" class="btn btn-primary btn-sm">Return to EMR</a>
+
+        <h3>Timestamp:</h3>
+        {{ test.timestamp }}
+        <h3>Hospital:</h3>
+        {{ test.hospital.name }}
+        <h3>Doctor:</h3>
+        {{ test.doctor.user.first_name }} {{ test.doctor.user.last_name }}
+        <h3>Name:</h3>
+        {{ test.name }}
+        <h3>Description:</h3>
+        <div style=" width:450px; word-wrap:break-word;">{{ test.description }}</div>
+        {% if test.file.name %}
+            <h3>File:</h3>
+            <a href="{{ test.file.url }}">{{ test.filename }}</a>
+        {% endif %}
+
+        <br/><br/>
+        {% if user_type == "doctor" %}
+            {% if test.released %}
+                <a class="btn btn-default btn-sm disabled">Test result was released</a>
+            {% else %}
+                <a id="releaseResult" class="btn btn-default btn-sm">Release Test Result</a>
+            {% endif %}
+        {% endif %}
+
+        <script>
+            $("#releaseResult").click(function () {
+                if (confirm('You are about to release this test result to be visible to the patient')){
+                $.ajax({
+                    url: "/release/{{ test.id }}"
+                }).done(function( o ) {
+                    window.location = "/EMR/{{ test.patient.id }}"
+                });
+            }})
+        </script>
+        {% else %}
+        <br /><br /><br />
+        <p class="lead text-center">Please Log in <a href="/login/">here</a>.</p>
+    {% endif %}
+{% endblock %}

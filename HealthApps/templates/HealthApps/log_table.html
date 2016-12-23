@@ -1,0 +1,32 @@
+{% extends 'HealthApps/base.html' %}
+{% block content %}
+    <h1>Log Items</h1>
+    Click on an entry to view details
+    {% if request.user.is_superuser  or user_type == 'admin' %}
+        <table class="table table-striped table-hover">
+            <tr>
+                <th>Timestamp</th>
+                <th>Description</th>
+            </tr>
+            {% if log_items|length > 0 %}
+                {% for log_item in log_items %}
+                    <tr class="clickable-row" data-href="/logItem/{{ log_item.id }}" style="cursor: pointer; cursor: hand;">
+                        <td>{{ log_item.timestamp }}</td>
+                        <td>{{ log_item.description }}</td>
+                    </tr>
+                {% endfor %}
+                <script>
+                    jQuery(document).ready(function($) {
+                        $(".clickable-row").click(function() {
+                            window.document.location = $(this).data("href");
+                        });
+                    });
+                </script>
+            {% else %}
+                <tr><td colspan="2">Nothing here yet!</td></tr>
+            {% endif %}
+        </table>
+    {% else %}
+        <div>Must be logged in as an admin to view logs.</div>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends 'HealthApps/base.html' %}
+{% block content %}
+    {% if user.is_authenticated %}
+    <div class="container">
+        <h1>Transfer Patients and Admitted Patients</h1>
+        Click on a patient to view their Electronic Medical Record
+        <br/>
+        <br/>
+        <table class="table table-striped table-hover ">
+            <tr>
+                <th>Patient Name</th>
+                <th>Insurance Number</th>
+                <th>Status</th>
+            </tr>
+            {% if patients|length > 0 %}
+                {% for patient in patients %}
+                    <tr class="clickable-row" data-href="/EMR/{{ patient.id }}" style="cursor: pointer; cursor: hand;">
+                        <td>{{ patient.user.first_name }} {{ patient.user.last_name }}</td>
+                        <td>{{ patient.insurance_number }}</td>
+                        <td>
+                            {% if patient.transfer_to != None %}
+                                Needs to be accepted from transfer
+                            {% elif patient.admitted_to != None %}
+                                Currently admitted to {{ patient.admitted_to }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+
+                <script>
+                    jQuery(document).ready(function($) {
+                        $(".clickable-row").click(function() {
+                            window.document.location = $(this).data("href");
+                        });
+                    });
+                </script>
+            {% else %}
+                <tr><td colspan="3">Nothing here yet!</td></tr>
+            {% endif %}
+        </table>
+    </div>
+    {% else %}
+        Please Log in <a href="login">here</a>.
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'HealthApps/base.html' %}
+{% block content %}
+{% if user.is_authenticated %}
+        {% if user_type == "doctor" or user_type == "admin" or user_type == "patient" or user_type == "nurse"%}
+    <h1>{{ prescription.name }}</h1>
+
+    <a href="/EMR/{{ prescription.patient.id }}" class="btn btn-primary btn-sm">Return to EMR</a>
+    
+    <h3>Timestamp:</h3>
+        {{ prescription.timestamp }}
+        <h3>Doctor:</h3>
+        {{ prescription.doctor.user.first_name }} {{ prescription.doctor.user.last_name }}
+        <h3>Name:</h3>
+        {{ prescription.name }}
+        <h3>Dosage Amount:</h3>
+        {{ prescription.dosage_amount }} {{ prescription.dosage_unit }}
+        <h3>Dosage Frequency:</h3>
+        {{ prescription.frequency_amount }} doses {{ prescription.frequency_unit }}
+
+        <br/><br/>
+
+        {% if user_type == "doctor" %}
+            {% if prescription.prescribed %}
+                <a id="deletePrescription" class="btn btn-default btn-sm">End Prescription</a>
+            {% else %}
+                <a class="btn btn-default btn-sm disabled">Prescription was ended</a>
+            {% endif %}
+        {% endif %}
+
+        <script>
+            $("#deletePrescription").click(function () {
+                if (confirm('You are about to end this prescription')){
+                $.ajax({
+                    url: "/delete/{{ prescription.id }}"
+                }).done(function( o ) {
+                    window.location = "/EMR/{{ prescription.patient.id }}"
+                });
+            }})
+        </script>
+{% endif %}
+    {% else %}
+    <br /><br /><br />
+    <p class="lead text-center">Please Log in <a href="/login/">here</a>.</p>
+    {% endif %}
+
+{% endblock %}

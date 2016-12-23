@@ -1,0 +1,16 @@
+{% extends 'HealthApps/base.html' %}
+{% block content %}
+    <div class="container">
+        <h1>Confirm Action</h1>
+        <br />
+        {% if user.is_authenticated %}
+            <form action="" method="post">{% csrf_token %}
+                <p>Are you sure you want to cancel the {{ object }}?</p>
+                <input type="submit" value="Yes" />
+                <input type="submit" value="No" name="goback"/>
+            </form>
+        {% else %}
+            Please Log in <a href="/login/">here</a>.
+        {% endif %}
+    </div>
+{% endblock %}

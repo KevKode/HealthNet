@@ -1,0 +1,59 @@
+{% extends 'HealthApps/base.html' %}
+{% block content %}
+<div class="container">
+
+    <h1>Transfer Patient</h1>
+
+    {% if user.is_authenticated %}
+        {% if user_type == "doctor" or user_type == "admin" or user.is_superuser %}
+        <form enctype="multipart/form-data" action="" method="post" class="col-lg-2 form-horizontal">{% csrf_token %}
+
+                <p></p>
+
+            <br/>
+            {{ form.transfer_to.label_tag }}
+            {{ form.transfer_to }}
+            {{ form.transfer_to.errors }}
+            {% if messages %}
+                <ul class="messages">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>                {% endfor %}
+                </ul>
+            {% endif %}
+            <br />
+            <br />
+            <br />
+
+            <script type="text/javascript">
+                $(function () {
+                    $('#id_date').datetimepicker({
+                                format: 'MM/DD/YYYY'}
+                    );
+                });
+            </script>
+            <script type="text/javascript">
+                $(function () {
+                    $('#id_start_time').datetimepicker({
+                                format: 'HH:mm'
+                    }
+                    );
+                });
+            </script>
+            <script type="text/javascript">
+                $(function () {
+                    $('#id_end_time').datetimepicker({
+                                format: 'HH:mm'
+                    }
+                    );
+                });
+            </script>
+        <br />
+                <input type="submit" value="Transfer Patient" class="btn-default"/> <input type="submit" onclick="return confirm('You are about to exit without transferring')" value="Exit Without Transferring" name='goback' class="btn-default"/>
+      </form>
+      {% endif %}
+    {% else %}
+        Please Log in <a href="/login/">here</a>.
+    {% endif %}
+</div>
+
+{% endblock %}

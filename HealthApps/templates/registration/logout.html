@@ -1,0 +1,8 @@
+{%  extends "HealthApps/base.html" %}
+{% block content %}
+    {% if user.is_authenticated %}
+    <h1>Rango says... hello {{ request.user }}!</h1>
+    {% else %}
+    <h1>Rango says... hello world!</h1>
+    {% endif %}
+{%  endblock %}

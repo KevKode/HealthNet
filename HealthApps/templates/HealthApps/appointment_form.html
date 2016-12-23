@@ -1,0 +1,158 @@
+{% extends 'HealthApps/base.html' %}
+{% block content %}
+{% if user.is_authenticated %}
+<div class="container">
+
+    {% if header == "create" %}
+       <h1>Create Appointment</h1>
+    {% else %}
+        <h1>Edit Appointment</h1>
+    {% endif %}
+
+        {% if user_type == "doctor" or user_type == "patient" or user_type == "nurse" %}
+        <form enctype="multipart/form-data" action="" method="post" class="">{% csrf_token %}
+            {% if user_type == "doctor"  or user_type == "nurse" %}
+                <p>An appointment must be at least 30 minutes long.</p>
+            {% endif %}
+            <div class="col-md-5">
+                <div class="form-group">
+                    <br /><br /><label class="form-control-label">{{ form.date.label_tag }}</label><br />
+                        <div class="col-xs-9">
+                        <p>{{ form.date }}</p>
+                        </div>
+                        <p>{{ form.date.errors }}</p>
+                </div>
+
+                <div class="form-group">
+                    <br /><br /><label class="form-control-label">{{ form.start_time.label_tag }}</label><br />
+                        <p>Time is in 24 hr format.</p>
+                        <div class="col-xs-9">
+                        <p>{{ form.start_time }}</p>
+                        </div>
+                        <p>{{ form.start_time.errors }}</p>
+                </div>
+
+                <!-- these fields are hidden, but required-->
+                {% if user_type == "patient" %}
+                    {{ form.end_time.errors }}
+                    {{ form.end_time.as_hidden }}
+                    {{ form.patient.errors }}
+                    {{ form.patient.as_hidden }}
+                {% endif %}
+
+                {% if user_type == "doctor" %}
+                    <div class="form-group">
+                        <br />
+                        <br /><br /><label class="form-control-label">{{ form.end_time.label_tag }}</label><br />
+
+                        <div class="col-xs-9">
+                            <p>{{ form.end_time }}</p>
+                        </div>
+                        <p>{{ form.end_time.errors }}</p>
+                </div>
+
+                <div class="form-group">
+                        <br /><br /><label class="form-control-label">{{ form.patient.label_tag }}</label><br />
+                        <div class="col-xs-9">
+                            <p>{{ form.patient }}</p>
+                        </div>
+                        <p>{{ form.patient.errors.as_text }}</p>
+                </div>
+
+                {% endif %}
+                {% if user_type == "nurse" %}
+                    <div class="form-group">
+                        <br />
+                        <br /><br /><label class="form-control-label">{{ form.end_time.label_tag }}</label><br />
+
+                        <div class="col-xs-9">
+                            <p>{{ form.end_time }}</p>
+                        </div>
+                        <p>{{ form.end_time.errors }}</p>
+                </div>
+
+                <div class="form-group">
+                        <br /><br /><label class="form-control-label">{{ form.patient.label_tag }}</label><br />
+                        <div class="col-xs-9">
+                            <p>{{ form.patient }}</p>
+                        </div>
+                        <p>{{ form.patient.errors.as_text }}</p>
+                </div>
+                {% endif %}
+                <br />
+                <div class="form-group">
+                        <br /><br /><label class="form-control-label" >{{ form.description.label_tag }}</label><br />
+                        <div class="col-xs-9">
+
+                            <p>{{ form.description }}</p>
+                        </div>
+                        <p>{{ form.description.errors }}</p>
+                </div>
+                </div>
+                <br /><br />
+                {% if messages %}
+                    <ul class="messages">
+                    {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+
+                {% if header == "create" %}
+            <div class="col-xs-9">
+                <input type="submit" value="Schedule Appointment" class="btn-primary"/><br /><br />
+                <input type="submit" onclick="return confirm('You are about to exit without saving')" value="Exit Without Saving" name='goback' class="btn-default"/>
+            </div>
+                {% else %}
+            <div class="col-xs-9">
+                <input type="submit" value="Update Appointment" class="btn-success"/><br /><br />
+            </div>
+                <!--Nurse should not be able to see this button since they cannot cancel appointments-->
+            <div class="col-xs-9">
+                {% if user_type != "nurse" %}
+                    <input type="submit" value="Cancel Appointment" name="cancel" class="btn-danger"/><br /><br />
+                {% endif %}
+                <input type="submit" onclick="return confirm('You are about to exit without saving')" value="Exit Without Saving" name='goback' class="btn-default"/>
+            </div>
+            {% endif %}
+
+
+
+
+            </div>
+
+
+
+
+            <script type="text/javascript">
+                $(function () {
+                    $('#id_date').datetimepicker({
+                                format: 'YYYY-MM-DD'}
+                    );
+                });
+            </script>
+            <script type="text/javascript">
+                $(function () {
+                    $('#id_start_time').datetimepicker({
+                                format: 'HH:mm'
+                    }
+                    );
+                });
+            </script>
+            <script type="text/javascript">
+                $(function () {
+                    $('#id_end_time').datetimepicker({
+                                format: 'HH:mm'
+                    }
+                    );
+                });
+            </script>
+        <br />
+
+      </form>
+      {% endif %}
+</div>
+{% else %}
+        Please Log in <a href="/login/">here</a>.
+    {% endif %}
+{% endblock %}

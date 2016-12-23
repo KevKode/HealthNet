@@ -1,0 +1,41 @@
+{% extends 'HealthApps/base.html' %}
+{% block content %}
+{% load static %}
+<div class="jumbotron">
+    <br/>
+    <br/>
+    <h1>Welcome to HealthNet</h1>
+    {% if user.is_authenticated %}
+        <p>This is your personal online medical experience. Click the tabs in the navigation bar to get started.</p>
+    {% else %}
+        <p>This is your personal online medical experience. Click the button below to get started.</p>
+        <p><a href="/registerOptions" class="btn btn-primary btn-lg">Register Now</a></p>
+    {% endif %}
+
+</div>
+<div class="col-md-4">
+        <img style="max-width: 100%; max-height:100%" src="{% static 'bootstrap/css/photos/staff2.jpg' %}" />
+    <br /><p class="lead text-center">About HealthNet</p>
+    HealthNet, headquartered in Rochester, New York, and one of the leading non-profit health care systems in the state,
+    is creating a network you can trust. Our promise to our communities is that anyone who enters our system will
+    receive the right care, at the right quality, at the right time, at the right place and at the right cost.
+</div>
+
+<div class="col-md-4">
+    <img style="max-width: 100%; max-height:100%" src="{% static 'bootstrap/css/photos/hospital.jpg' %}" />
+<p class="lead text-center">HealthNet is associated with these hospitals: </p>
+    {% for hospital in hospitals %}
+                <p>{{ hospital.name }}</p>
+    {% endfor %}
+    <p>We hope to continue expand our network. Contact us to consider joining.</p>
+</div>
+<div class="col-md-4 padding">
+    <img style="max-width: 100%; max-height:100%" src="{% static 'bootstrap/css/photos/staff.jpeg' %}" />
+    <br /><p class="lead text-center">HealthNet's Staff</p>
+    <p>HealthNet's staff is the best in the country. We have highly trained, award winning staff
+        members to help with all of your health needs. Each staff member is ready to give you
+    the best service. We take this mentality very seriously to better give you the care you need. </p>
+
+</div>
+
+{% endblock %}

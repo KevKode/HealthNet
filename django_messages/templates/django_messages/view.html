@@ -1,0 +1,51 @@
+{% extends "HealthApps/base.html" %}
+{% load i18n %}
+
+{% block content %}
+<h1>{% trans "View Message" %}</h1>
+<dl class="message-headers">
+    <h2>{% trans "Subject" %}</h2>
+    <dd><strong>{{ message.subject }}</strong></dd>
+    <br />
+    <h2>{% trans "Sender" %}</h2>
+    <dd>{{ message.sender }}</dd>
+    <br />
+    <h2>{% trans "Date" %} </h2>
+    <dd>{{ message.sent_at|date:_("DATETIME_FORMAT")}}</dd>
+    <br />
+    <h2>{% trans "Recipient" %}</h2>
+    <dd>{{ message.recipient }}</dd>
+</dl>
+    <br/>
+    <h3>MESSAGE:</h3>
+{{ message.body|linebreaksbr }}<br /><br />
+
+{% ifequal message.recipient.pk user.pk %}
+    {% if user_type != 'patient' %}
+        <a href="{% url 'messages_reply' message.id %}" class="btn btn-default">{% trans "Reply" %}</a>
+    {% endif %}
+{% endifequal %}
+<a href="{% url 'messages_delete' message.id %}" class="btn btn-default">{% trans "Delete" %}</a>
+    <br />
+    <br />
+    <a href="{% url 'messages_inbox' %} " class="btn btn-primary">{% trans "Inbox" %}</a>
+    {% if user_type != 'patient' %}
+        <a href="{% url 'messages_outbox' %} " class="btn btn-primary">{% trans "Sent Messages" %}</a>
+        <a href="{% url 'messages_compose' %} " class="btn btn-primary">{% trans "New Message" %}</a>
+    {% endif %}
+    <a href="{% url 'messages_trash' %} " class="btn btn-primary">{% trans "Trash" %}</a>
+{% comment %}Example reply_form integration
+{% if reply_form %}
+<h1>{% trans "Compose reply"%}</h1>
+<form action="{% url 'messages_reply' message.id %}" method="post">
+{% csrf_token %}
+    <br />
+<table>
+{{ reply_form.as_table }}
+</table>
+    <br />
+<input type="submit" value="{% trans "Send" %} &raquo;"/>
+</form>
+{% endif %}
+{% endcomment %}
+{% endblock %}

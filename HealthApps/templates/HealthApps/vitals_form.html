@@ -1,0 +1,184 @@
+{% extends 'HealthApps/base.html' %}
+{% block content %}
+{% if user.is_authenticated %}
+        {% if user_type == "doctor" or  user_type == "nurse"%}
+
+<h1>Edit Vitals</h1>
+<form method="post" enctype="multipart/form-data" id="vital_form">
+    {% csrf_token %}
+    <div class="col-md-5">
+        <div class="form-group">
+                    <br /><br /><label class="form-control-label">Height (in.):</label><br />
+                        <div class="col-xs-9">
+                        <p>{{ form.height }}</p>
+                        </div>
+            <div class="col-xs-12">
+                        <p>{{ form.height.errors }}</p>
+            </div>
+        </div>
+        <div class="form-group">
+                    <br /><br /><label class="form-control-label">Weight (lbs):</label><br />
+                        <div class="col-xs-9">
+                        <p>{{ form.weight }}</p>
+                        </div>
+            <div class="col-xs-12">
+                        <p>{{ form.weight.errors }}</p>
+            </div>
+        </div>
+        <div class="form-group">
+                    <br /><br /><label class="form-control-label">Cholesterol (LDL/HDL in mg/dL):</label><br />
+                        <div class="col-xs-9">
+                        <p>{{ form.cholesterol }}</p>
+                        </div>
+                        <div class="col-xs-12">
+                        <p>{{ form.cholesterol.errors }}</p>
+                        </div>
+        </div>
+        <div class="form-group">
+                    <br /><br /><label class="form-control-label">Pulse (BPM):</label><br />
+                        <div class="col-xs-9">
+                        <p>{{ form.pulse }}</p>
+                        </div>
+                        <div class="col-xs-12">
+                            <p>{{ form.pulse.errors }}</p>
+                        </div>
+        </div>
+        <div class="form-group">
+                    <br /><br /><label class="form-control-label">Temperature (Fahrenheit):</label><br />
+                        <div class="col-xs-9">
+                        <p>{{ form.temperature }}</p>
+                        </div>
+            <div class="col-xs-12">
+                        <p>{{ form.temperature.errors }}</p>
+            </div>
+        </div>
+        <div class="form-group">
+                    <br /><br /><label class="form-control-label">Blood Pressure (Systolic/Diastolic in mm HG):</label><br />
+                        <div class="col-xs-9">
+                        <p>{{ form.blood_pressure }}</p>
+                        </div>
+            <div class="col-xs-12">
+                        <p>{{ form.blood_pressure.errors }}</p>
+            </div>
+        </div>
+        <div class="form-group">
+                    <br /><br /><label class="form-control-label">{{ form.blood_type.label_tag }}</label><br />
+                        <div class="col-xs-9">
+                        <p>{{ form.blood_type }}</p>
+                        </div>
+            <div class="col-xs-12">
+                        <p>{{ form.blood_type.errors }}</p>
+            </div>
+        </div>
+        <div class="form-group">
+        <br /><br /><br />
+            <input type="submit" value="Submit" class="btn-primary"/>
+        </div>
+    </div>
+
+</form>
+
+
+<script src="http://cdn.jsdelivr.net/jquery.validation/1.15.1/jquery.validate.js"></script>
+
+<script type="text/javascript">
+    $.validator.setDefaults({
+        highlight: function (element) {
+            $(element).closest('.form-group').addClass('has-error');
+            $(element).closest('.form-group').removeClass('has-success');
+        },
+        unhighlight: function (element) {
+            $(element).closest('.form-group').removeClass('has-error');
+            $(element).closest('.form-group').addClass('has-success');
+        },
+        errorElement: 'span',
+        errorClass: 'help-block',
+        errorPlacement: function (error, element) {
+            if (element.parent('.input-group').length) {
+                error.insertAfter(element.parent());
+            } else {
+                error.insertAfter(element);
+            }
+        }
+    });
+
+    var $tabs = $('#registerTab').find('li');
+
+    function showPrev() {
+        $tabs.filter('.active').prev('li').removeClass("disabled");
+        $tabs.filter('.active').prev('li').find('a[data-toggle]').each(function () {
+            $(this).attr("data-toggle", "tab");
+        });
+
+        $tabs.filter('.active').prev('li').find('a[data-toggle="tab"]').tab('show');
+
+        $tabs.filter('.active').next('li').find('a[data-toggle="tab"]').each(function () {
+            $(this).attr("data-toggle", "").parent('li').addClass("disabled");
+        })
+    }
+
+    function showNext() {
+        if ($('#reg_form').valid()) {
+            $tabs.filter('.active').next('li').removeClass("disabled");
+            $tabs.filter('.active').next('li').find('a[data-toggle]').each(function () {
+                $(this).attr("data-toggle", "tab");
+            });
+
+            $tabs.filter('.active').next('li').find('a[data-toggle="tab"]').tab('show');
+
+            $tabs.filter('.active').prev('li').find('a[data-toggle="tab"]').each(function () {
+                $(this).attr("data-toggle", "").parent('li').addClass("disabled");
+            })
+        }
+    }
+
+    FORM_RULES = {
+        '{{ form.cholesterol.name }}': 'CHOLESTEROL',
+        '{{ form.blood_pressure.name }}': 'BLOOD_PRESSURE'
+    };
+
+    $(document).ready(function () {
+        $.validator.addMethod("INSURANCE", function (value, element) {
+                return this.optional(element) || /^[A-Z][0-9]{12}$/.test(value);
+            }, "Insurance Number Format: One capital letter followed by 12 single digit numbers. (Ex: A123456789012)"
+        );
+
+        $.validator.addMethod("EMAIL", function (value, element) {
+                return this.optional(element) || /^[a-zA-Z0-9._-]+@[a-zA-Z0-9-]+\.[a-zA-Z.]{2,5}$/i.test(value);
+            }, "Email Address is invalid: Please enter a valid email address."
+        );
+
+        $.validator.addMethod("CHOLESTEROL", function (value, element) {
+                return this.optional(element) || /^(9[0-9]|1[0-9][0-9]|200)\/(100|2[5-9]|[3-9][0-9])$/i.test(value);
+            }, "Please input a valid LDL/HDL. LDL must be between 90 and 200, HDL must be between 25 and 100."
+        );
+
+        $.validator.addMethod("BLOOD_PRESSURE", function (value, element) {
+            return this.optional(element) || /^(180|1[0-7][0-9])\/(120|[6-9][0-9]|1[0-1][0-9])$/i.test(value);
+        }, "Please input a valid Systolic/Diastolic blood pressure. " +
+            "Systolic must be between 100 and 180, Diastolic must be between 60 and 120."
+        );
+
+        $.validator.addMethod("EMERGENCY_NUMBER", function (value, element) {
+                return /^(\(\d{3}\)|\d{3})?[- \.]?(\d{3})[- \.]?(\d{4})$/i.test(value);
+            }, "Please input a valid phone number."
+        );
+
+        $.validator.addMethod("PASSMATCH", function (value, element) {
+                var password = $("#password").val();
+                var password_confirm = $("#password_confirm").val();
+                return this.optional(element) || password == password_confirm;
+            }, "Passwords do not match."
+        );
+
+        $('#vital_form').validate({
+            rules: FORM_RULES
+        });
+    });
+</script>
+{% endif %}
+    {% else %}
+    <br /><br /><br />
+    <p class="lead text-center">Please Log in <a href="/login/">here</a>.</p>
+    {% endif %}
+{% endblock %}

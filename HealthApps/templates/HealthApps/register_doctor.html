@@ -1,0 +1,179 @@
+{% extends 'HealthApps/base.html' %}
+
+{% load staticfiles %}
+{% block content %}
+
+<div class="container">
+    <h1>Doctor Registration</h1>
+    <ul class="nav nav-tabs" id="registerTab">
+        <li class="active"><a data-toggle="tab" href="#step1">Account Info</a></li>
+        <li class="disabled"><a data-toggle="" href="#step2">Hospital Info</a></li>
+    </ul>
+
+    <form id="reg_form" enctype="multipart/form-data" action="" method="post">{% csrf_token %}
+        <fieldset>
+            <div class="tab-content">
+                <div id="step1" class="tab-pane fade in active">
+                    <div class="form-group">
+                        <label class="form-control-label" for="first_name">First Name</label>
+                        <input name="first_name" id="first_name" type="text" class="form-control"
+                               placeholder="Enter First Name">
+                        <p>{{ form.first_name.errors.as_text }}</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-control-label" for="last_name">Last Name</label>
+                        <input name="last_name" type="text" id="last_name" class="form-control"
+                               placeholder="Enter Last Name">
+                        <p>{{ form.last_name.errors.as_text }}</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-control-label" for="username">Email Address</label>
+                        <input name="username" type="email" id="username" class="form-control"
+                               placeholder="Enter Email Address">
+                        <p>{{ form.username.errors.as_text }}</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-control-label" for="password">Password</label>
+                        <input name="password" type="password" id="password" class="form-control"
+                               placeholder="Enter Password">
+                        <p>{{ form.password.errors.as_text }}</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-control-label" for="password_confirm">Confirm Password</label>
+                        <input name="password_confirm" id="password_confirm" class="form-control"
+                               type="password" placeholder="Re-enter Password">
+                        <p>{{ form.password_confirm.errors.as_text }}</p>
+                    </div>
+                    <button class="btn btn-primary btnNext" type="button" onclick="return showNext()">Next</button>
+                </div>
+
+                <div id="step2" class="tab-pane fade">
+                    <div class="form-group">
+                        <label class="form-control-label" for="hospitals">Hospitals</label>
+                        <select id="hospitals" class="form-control" name="hospitals" multiple="multiple">
+                            {% for value, text in form.fields.hospitals.choices %}
+
+                            <option value="{{ value }}">{{ text }}</option>
+
+                            {% endfor %}
+                        </select>
+                        <p>{{ form.hospitals.errors.as_text }}</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-control-label" for="max_patients">Maximum Patients</label>
+                        <input name="max_patients" type="number" min=0 id="max_patients" class="form-control"
+                               placeholder="Enter Maximum Patients">
+                        <p>{{ form.max_patients.errors.as_text }}</p>
+                    </div>
+
+                    <div class="form-group">
+                        <button class="btn btn-primary btnPrev" type="button" onclick="return showPrev()">Previous
+                        </button>
+                        <input type="submit" value="Submit" class="btn btn-success"/>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <a class="btn btn-danger btnCancel" href="index.html">Cancel</a>
+
+        </fieldset>
+    </form>
+
+
+</div>
+
+<script src="http://cdn.jsdelivr.net/jquery.validation/1.15.1/jquery.validate.js"></script>
+
+<script type="text/javascript">
+    $('.btnNext').click(function () {
+        $('.nav-tabs > .active').next('li').find('a').trigger('click');
+    });
+
+    $('.btnPrevious').click(function () {
+        $('.nav-tabs > .active').prev('li').find('a').trigger('click');
+    });
+
+    $.validator.setDefaults({
+        highlight: function (element) {
+            $(element).closest('.form-group').addClass('has-error');
+            $(element).closest('.form-group').removeClass('has-success');
+        },
+        unhighlight: function (element) {
+            $(element).closest('.form-group').removeClass('has-error');
+            $(element).closest('.form-group').addClass('has-success');
+        },
+        errorElement: 'span',
+        errorClass: 'help-block',
+        errorPlacement: function (error, element) {
+            if (element.parent('.input-group').length) {
+                error.insertAfter(element.parent());
+            } else {
+                error.insertAfter(element);
+            }
+        }
+    });
+
+    var $tabs = $('#registerTab').find('li');
+
+    function showPrev() {
+        $tabs.filter('.active').prev('li').removeClass("disabled");
+        $tabs.filter('.active').prev('li').find('a[data-toggle]').each(function () {
+            $(this).attr("data-toggle", "tab");
+        });
+
+        $tabs.filter('.active').prev('li').find('a[data-toggle="tab"]').tab('show');
+
+        $tabs.filter('.active').next('li').find('a[data-toggle="tab"]').each(function () {
+            $(this).attr("data-toggle", "").parent('li').addClass("disabled");
+        })
+    }
+
+    function showNext() {
+        if ($('#reg_form').valid()) {
+            $tabs.filter('.active').next('li').removeClass("disabled");
+            $tabs.filter('.active').next('li').find('a[data-toggle]').each(function () {
+                $(this).attr("data-toggle", "tab");
+            });
+
+            $tabs.filter('.active').next('li').find('a[data-toggle="tab"]').tab('show');
+
+            $tabs.filter('.active').prev('li').find('a[data-toggle="tab"]').each(function () {
+                $(this).attr("data-toggle", "").parent('li').addClass("disabled");
+            })
+        }
+    }
+
+    FORM_RULES = {
+        '{{ form.first_name.name }}': 'required',
+        '{{ form.last_name.name }}': 'required',
+        '{{ form.username.name }}': 'required EMAIL',
+        '{{ form.password.name }}': 'required',
+        '{{ form.password_confirm.name }}': 'required PASSMATCH',
+        '{{ form.hospital.name }}': 'required',
+        '{{ form.max_patients.name }}': 'required'
+    };
+
+    $(document).ready(function () {
+        $.validator.addMethod("EMAIL", function (value, element) {
+                    return this.optional(element) || /^[a-zA-Z0-9._-]+@[a-zA-Z0-9-]+\.[a-zA-Z.]{2,5}$/i.test(value);
+                }, "Email Address is invalid: Please enter a valid email address."
+        );
+
+        $.validator.addMethod("PASSMATCH", function (value, element) {
+                    var password = $("#password").val();
+                    var password_confirm = $("#password_confirm").val();
+                    return this.optional(element) || password == password_confirm;
+                }, "Passwords do not match."
+        );
+
+        $('#reg_form').validate({
+            rules: FORM_RULES
+        });
+    });
+</script>
+{% endblock %}

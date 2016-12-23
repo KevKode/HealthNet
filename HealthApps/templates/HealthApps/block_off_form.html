@@ -1,0 +1,104 @@
+{% extends 'HealthApps/base.html' %}
+{% block content %}
+<div class="container">
+    <h1>Block Off Times</h1>
+    {% if user.is_authenticated %}
+        {% if user_type == "doctor" %}
+        <form enctype="multipart/form-data" action="" method="post" class="">{% csrf_token %}
+            {% if user_type == "doctor" %}
+                <p>Please choose a time to block off</p>
+            {% endif %}
+            <div class="col-md-5">
+                <div class="form-group">
+                    <br /><br /><label class="form-control-label">{{ form.date.label_tag }}</label><br />
+                        <div class="col-xs-9">
+                        <p>{{ form.date }}</p>
+                        </div>
+                        <p>{{ form.date.errors }}</p>
+                </div>
+
+                <div class="form-group">
+                    <br /><br /><label class="form-control-label">{{ form.start_time.label_tag }}</label><br />
+                        <p>Time is in 24 hr format.</p>
+                        <div class="col-xs-9">
+                        <p>{{ form.start_time }}</p>
+                        </div>
+                        <p>{{ form.start_time.errors }}</p>
+                </div>
+                <div class="form-group">
+                        <br />
+                        <br /><br /><label class="form-control-label">{{ form.end_time.label_tag }}</label><br />
+
+                        <div class="col-xs-9">
+                            <p>{{ form.end_time }}</p>
+                        </div>
+                        <p>{{ form.end_time.errors }}</p>
+                </div>
+                {% if header != "update" %}
+                    <div class="form-group">
+                            <br />
+                            <br /><br /><label class="form-control-label">{{ form.recurring.label_tag }} {{ form.recurring }}</label><br />
+                            <p>{{ form.recurring.errors }}</p>
+                    </div>
+                    <div class="form-group">
+                            <label class="form-control-label">{{ form.weeks.label_tag }}</label><br />
+
+                            <div class="col-xs-9">
+                                <p>{{ form.weeks }}</p>
+                            </div>
+                            <p>{{ form.weeks.errors }}</p>
+                    </div>
+                {% endif %}
+                <br /><br /><br /><br />
+                {% if header == "create" %}
+                <input type="submit" value="Schedule Block Off" class="btn-primary"/>
+                <input type="submit" onclick="return confirm('You are about to exit without saving')" value="Exit Without Saving" name='goback' class="btn-default"/>
+            {% else %}
+                <input type="submit" value="Update Block Off" class="btn-default"/>
+                    <input type="submit" value="Cancel Block Off" name="cancel" class="btn-default"/>
+                <input type="submit" onclick="return confirm('You are about to exit without saving')" value="Exit Without Saving" name='goback' class="btn-default"/>
+            {% endif %}
+            {% if messages %}
+                <ul class="messages">
+                {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+
+            </div>
+
+
+            <script type="text/javascript">
+                $(function () {
+                    $('#id_date').datetimepicker({
+                                format: 'YYYY-MM-DD'}
+                    );
+                });
+            </script>
+            <script type="text/javascript">
+                $(function () {
+                    $('#id_start_time').datetimepicker({
+                                format: 'HH:mm'
+                    }
+                    );
+                });
+            </script>
+            <script type="text/javascript">
+                $(function () {
+                    $('#id_end_time').datetimepicker({
+                                format: 'HH:mm'
+                    }
+                    );
+                });
+            </script>
+        <br />
+
+      </form>
+      {% endif %}
+    {% else %}
+        Please Log in <a href="/login/">here</a>.
+    {% endif %}
+</div>
+
+{% endblock %}

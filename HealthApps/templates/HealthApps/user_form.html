@@ -1,0 +1,21 @@
+{% extends 'HealthApps/base.html' %}
+{% block content %}
+<div class="container">
+<h1>Update Profile</h1>
+    {{ form.non_field_errors }}
+    <form enctype="multipart/form-data" action="" method="post">{% csrf_token %}
+        <h2>Email</h2>
+        {{ form.username}}
+        {{ form.username.errors }}
+        <h2>First Name</h2>
+        {{ form.first_name }}
+        {{ form.first_name.errors }}
+        <h2>Last Name</h2>
+        {{ form.last_name }}
+        {{ form.last_name.errors }}
+        <br>
+        <input type="submit" value="Save" class="btn-default"/>
+        <a href="/profile" class="btn-sm btn-default">Cancel</a>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>HealthNet</title>
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="{% static 'bootstrap/css/customCSS.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/datetimepicker.css' %}">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'bootstrap/js/moment.js' %}"></script>
+    <script src="{% static 'bootstrap/js/datetimepicker.js' %}"></script>
+
+
+
+
+</head>
+
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/index.html">HealthNet</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                {% if user.is_authenticated %}
+                    {% if user_type == 'admin' %}
+                        <li><a href="/calView">Home</a></li>
+                        <li><a href="/registerOptions">Register Users</a></li>
+                        <li><a href="/logTable">Log Table</a></li>
+                        <li><a href="/statistics">Statistics</a></li>
+                        <li><a href="/messages">Messages</a></li>
+                    {% elif user_type == 'doctor' %}
+                        <li><a href="/calView">Home</a></li>
+                        <li><a href="/patientList">Patient List</a></li>
+                        <li><a href="/appList">Appointments</a></li>
+                        <li><a href="/statistics">Statistics</a></li>
+                        <li><a href="/blockOff">Block Off Time</a></li>
+                        <li><a href="/messages">Messages</a></li>
+                    {% elif user_type == 'nurse' %}
+                        <li><a href="/calView">Home</a></li>
+                        <li><a href="/patientList">Patient List</a></li>
+                        <li><a href="/appList">Appointments</a></li>
+                        <li><a href="/messages">Messages</a></li>
+                    {% elif user_type == 'patient' %}
+                        <li><a href="/calView">Home</a></li>
+                        <li><a href="/profile">Profile</a></li>
+                        <li><a href="/appList">Appointments</a></li>
+                        <li><a href="/toEMR/{{ request.user.id }}">Medical Records</a></li>
+                        <li><a href="/messages">Notifications</a></li>
+                    {% elif request.user.is_superuser %}
+                        <li><a href="/calView">Home</a></li>
+                        <li><a href="/registerOptions">Register Users</a></li>
+                        <li><a href="/logTable">Log Table</a></li>
+                        <li><a href="/approveList">Approve Staff</a></li>
+                        <li><a href="/messages">Messages</a></li>
+                    {% endif %}
+                {% else %}
+                    <li><a href="/registerOptions">Register</a></li>
+                {% endif %}
+            </ul>
+            {% if user.is_authenticated %}
+                <form class="navbar-form navbar-right" id="log_out" method="post" action="/logout/">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-default" value="submit">Logout</button>
+                </form>
+                {% if request.user.is_superuser %}
+                    <p class="navbar-right welcome">Logged in as System Administrator</p>
+                {% elif user_type == 'patient' %}
+                    <p class="navbar-right welcome">Logged in as <a href="/profile" style="color:white;text-decoration:underline">{{ request.user.get_full_name }}</a></p>
+                {% else %}
+                    <p class="navbar-right welcome">Logged in as {{ request.user.get_full_name }}</p>
+                {% endif %}
+            {% else %}
+                <div style="padding-top: 3.5px"><a href="/login" class="btn btn-default navbar-right">Login</a></div>
+            {% endif %}
+
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>
+
+<div class="container">
+
+    <div class="starter-template">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+</div><!-- /.container -->
+
+
+<footer class="navbar-fixed-bottom">
+    <div class="container">
+        <p class="text-muted">HealthNet is Copyright 2016. All rights reserved. Made by Kevin Arnett, Lilly Bokun, Brian
+            Kolkka, Gavriel Rachael-Homann, and Marianna Sternefeld</p>
+    </div>
+</footer>
+
+
+</body>
+</html>

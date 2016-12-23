@@ -1,0 +1,53 @@
+{% extends 'HealthApps/base.html' %}
+{% block content %}
+{% if user.is_authenticated %}
+        {% if user_type == "doctor" or user_type == "admin" or user.is_superuser %}
+<h1>Add a Test Result</h1>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="col-md-5">
+                <div class="form-group">
+                    <br /><br /><label class="form-control-label">{{ form.name.label_tag }}</label><br />
+                        <div class="col-xs-9">
+                        <p>{{ form.name }}</p>
+                        </div>
+                    <div class="col-xs-12">
+                        <p>{{ form.name.errors }}</p>
+                    </div>
+                </div>
+        <div class="form-group">
+                    <br /><br /><label class="form-control-label">{{ form.description.label_tag }}</label><br />
+                        <div class="col-xs-9">
+                        <p>{{ form.description }}</p>
+                        </div>
+                    <div class="col-xs-12">
+                        <p>{{ form.description.errors }}</p>
+                    </div>
+                </div>
+        <div class="form-group">
+                    <br /><br /><label class="form-control-label">{{ form.file.label_tag }}</label><br />
+                        <div class="col-xs-9">
+                        <p>{{ form.file }}</p>
+                        </div>
+                    <div class="col-xs-12">
+                        <p>{{ form.file.errors }}</p>
+                    </div>
+                </div>
+
+    </div>
+
+
+
+<div class="col-xs-9">
+    <br><input type="submit" value="Submit" class="btn-primary"/>
+</div>
+</form>
+
+{% else %}
+            <div>Must be logged in as the correct user.</div>
+        {% endif %}
+    {% else %}
+    <br /><br /><br />
+    <p class="lead text-center">Please Log in <a href="/login/">here</a>.</p>
+    {% endif %}
+{% endblock %}

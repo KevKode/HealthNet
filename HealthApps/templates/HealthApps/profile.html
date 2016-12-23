@@ -1,0 +1,94 @@
+{% extends 'HealthApps/base.html' %}
+{% block content %}
+<div class="container">
+    <h1>Patient Profile</h1>
+    <div class="row">
+
+        <br/>
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{ patient.user.first_name }} {{ patient.user.last_name }}</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-9 col-lg-9">
+                            <table class="table table-user-information">
+                                <tbody>
+                                <tr>
+                                    <td><b>Insurance Number</b></td>
+                                    <td>{{ patient.insurance_number }}</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Hospital</b></td>
+                                    <td>{{ patient.hospital }}</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Doctor</b></td>
+                                    <td>{{ patient.doctor }}</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+
+                                <tr>
+                                    <td><b>Height</b></td>
+                                    <td>{{ patient.height }}</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Weight</b></td>
+                                    <td>{{ patient.weight }}</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Cholesterol</b></td>
+                                    <td>{{ patient.cholesterol }}</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Pulse</b></td>
+                                    <td>{{ patient.pulse }}</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Temperature</b></td>
+                                    <td>{{ patient.temperature }}</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Blood Pressure</b></td>
+                                    <td>{{ patient.blood_pressure }}</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Blood Type</b></td>
+                                    <td>{{ patient.get_blood_type_display }}</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><b>Email</b></td>
+                                    <td>{{ patient.user.username }}</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Emergency Contact</b></td>
+                                    <td>{{ patient.emergency_name }}</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Emergency Number</b></td>
+                                    <td>{{ patient.emergency_number }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <a class="btn btn-primary" href="updateProfile/{{ patient.id }}">Edit Profile</a>
+                    <a class="btn btn-primary" href="updateUser/{{ user.id }}">Edit User</a>
+                    <a class="btn btn-primary" href="EMR/{{ patient.id }}">View Medical Records</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
