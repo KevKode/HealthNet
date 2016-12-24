@@ -3,7 +3,7 @@ Last revision of code: December 2016
 
 Description: Web app which handles the records of multiple hospitals and the actions of their patients, doctors, nurses, and administrators.
 
-Installation and Running: Must have Python 3.4.3 and Django 1.9.1 installed
+Install and Run: Must have Python 3.4.3 and Django 1.9.1 installed
 
 1. Download repositiory
 2. Open a command window
