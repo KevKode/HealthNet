@@ -21,3 +21,5 @@ Existing Logins: All passwords are "djingledjango"
 * Hospital: Strong Memorial Hospital, Rochester Children's Hospital
  
 Images:
+
+![alt tag](http://i.imgur.com/KfB5MMb.png)
